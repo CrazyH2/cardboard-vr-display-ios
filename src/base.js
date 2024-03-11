@@ -14,11 +14,7 @@
  */
 
 import * as Util from './util.js';
-import o9nInstall from "./libraries/o9n.js"
 import NoSleep from 'nosleep.js/dist/NoSleep.js';
-
-// Add screenlock polyfill
-o9nInstall();
 
 // Start at a higher number to reduce chance of conflict.
 var nextDisplayId = 1000;
