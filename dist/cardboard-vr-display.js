@@ -3066,7 +3066,6 @@ module.exports = 'data:video/mp4;base64,AAAAIGZ0eXBtcDQyAAACAGlzb21pc28yYXZjMW1w
 var NoSleep$1 = unwrapExports(NoSleep);
 
 o9nInstall();
-var iosScreenLock = new ScreenLock();
 var nextDisplayId = 1000;
 var defaultLeftBounds = [0, 0, 0.5, 1];
 var defaultRightBounds = [0.5, 0, 0.5, 1];
@@ -3278,8 +3277,6 @@ VRDisplay.prototype.requestPresent = function (layers) {
             screen.orientation.lock('landscape-primary').catch(function (error) {
               console.error('screen.orientation.lock() failed due to', error.message);
             });
-          } else if (isIOS()) {
-            iosScreenLock.enable();
           }
           self.waitingForPresent_ = false;
           self.beginPresent_();
@@ -3287,8 +3284,6 @@ VRDisplay.prototype.requestPresent = function (layers) {
         } else {
           if (screen.orientation && screen.orientation.unlock) {
             screen.orientation.unlock();
-          } else if (isIOS()) {
-            iosScreenLock.disable();
           }
           self.removeFullscreenWrapper();
           self.disableWakeLock();
