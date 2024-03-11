@@ -3244,6 +3244,7 @@ VRDisplay.prototype.requestPresent = function (layers) {
         self.enableWakeLock();
         self.waitingForPresent_ = true;
       } else if (isIOS() || isWebViewAndroid()) {
+        document.body.style.height = "calc(100% + 1px)";
         window.scrollTo(0, 1);
         self.enableWakeLock();
         self.isPresenting = true;
@@ -3256,7 +3257,7 @@ VRDisplay.prototype.requestPresent = function (layers) {
       exitFullscreen();
       reject(new Error('Unable to present.'));
     } else if (isIOS()) {
-      window.scrollTo(0, 1);
+      window.scrollTo(0, 0);
     }
   });
 };
