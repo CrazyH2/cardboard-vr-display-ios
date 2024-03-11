@@ -14,7 +14,11 @@
  */
 
 import * as Util from './util.js';
+import ScreenLock from './screenlock.js';
 import NoSleep from 'nosleep.js/dist/NoSleep.js';
+
+// Get screenlock
+var iosScreenLock = new ScreenLock();
 
 // Start at a higher number to reduce chance of conflict.
 var nextDisplayId = 1000;
@@ -346,6 +350,8 @@ VRDisplay.prototype.requestPresent = function(layers) {
             screen.orientation.lock('landscape-primary').catch(function(error){
                     console.error('screen.orientation.lock() failed due to', error.message)
             });
+          } else if (Util.isIOS()) {
+            iosScreenLock.enable();
           }
           self.waitingForPresent_ = false;
           self.beginPresent_();
@@ -353,6 +359,8 @@ VRDisplay.prototype.requestPresent = function(layers) {
         } else {
           if (screen.orientation && screen.orientation.unlock) {
             screen.orientation.unlock();
+          } else if (Util.isIOS()) {
+            iosScreenLock.disable();
           }
           self.removeFullscreenWrapper();
           self.disableWakeLock();
@@ -384,6 +392,7 @@ VRDisplay.prototype.requestPresent = function(layers) {
         self.waitingForPresent_ = true;
       } else if (Util.isIOS() || Util.isWebViewAndroid()) {
         // *sigh* Just fake it.
+        window.scrollTo(0,1);
         self.enableWakeLock();
         self.isPresenting = true;
         self.beginPresent_();
@@ -395,6 +404,8 @@ VRDisplay.prototype.requestPresent = function(layers) {
     if (!self.waitingForPresent_ && !Util.isIOS()) {
       Util.exitFullscreen();
       reject(new Error('Unable to present.'));
+    } else if(Util.isIOS()) {
+      window.scrollTo(0,1);
     }
   });
 };
