@@ -22,6 +22,7 @@ function getOrientation() {
 }
 
 function o9nInstall() {
+  var orientation = getOrientation();
   var screen = window.screen;
   if (
     typeof window.ScreenOrientation === 'function' &&

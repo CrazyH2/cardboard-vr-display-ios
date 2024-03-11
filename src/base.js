@@ -20,9 +20,6 @@ import NoSleep from 'nosleep.js/dist/NoSleep.js';
 // Add screenlock polyfill
 o9nInstall();
 
-// Get screenlock
-var iosScreenLock = new ScreenLock();
-
 // Start at a higher number to reduce chance of conflict.
 var nextDisplayId = 1000;
 
@@ -353,8 +350,6 @@ VRDisplay.prototype.requestPresent = function(layers) {
             screen.orientation.lock('landscape-primary').catch(function(error){
                     console.error('screen.orientation.lock() failed due to', error.message)
             });
-          } else if (Util.isIOS()) {
-            iosScreenLock.enable();
           }
           self.waitingForPresent_ = false;
           self.beginPresent_();
@@ -362,8 +357,6 @@ VRDisplay.prototype.requestPresent = function(layers) {
         } else {
           if (screen.orientation && screen.orientation.unlock) {
             screen.orientation.unlock();
-          } else if (Util.isIOS()) {
-            iosScreenLock.disable();
           }
           self.removeFullscreenWrapper();
           self.disableWakeLock();
