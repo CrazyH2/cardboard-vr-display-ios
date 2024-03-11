@@ -2722,164 +2722,15 @@ ViewerSelector.prototype.createButton_ = function (label, onclick) {
   return button;
 };
 
-/**
- * @license
- * screenlock-polyfill
- * @author danrossi / https://github.com/danrossi
- * Copyright (c) 2017 Google
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-var IOSUtils = function () {
-    function IOSUtils() {
-        classCallCheck(this, IOSUtils);
-    }
-    createClass(IOSUtils, null, [{
-        key: 'requireOrientationPermission',
-        value: function requireOrientationPermission() {
-            return window.DeviceOrientationEvent !== undefined && typeof window.DeviceOrientationEvent.requestPermission === 'function';
-        }
-    }, {
-        key: 'requestOrientationPermissions',
-        value: function requestOrientationPermissions() {
-            return window.DeviceOrientationEvent.requestPermission();
-        }
-    }, {
-        key: 'isIOS',
-        get: function get$$1() {
-            return (/iP(hone|ad)/i.test(navigator.platform) || navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
-            );
-        }
-    }]);
-    return IOSUtils;
-}();
-
-/**
- * @license
- * screenlock-polyfill
- * @author danrossi / https://github.com/danrossi
- * Copyright (c) 2017 Google
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function iosScreenLock$1() {
-    return new Promise(function (accept) {
-        var el = document.querySelector(".screen-lockable");
-        el && el.classList.add("landscape");
-        (screen && screen.dispatchEvent || screen && screen.orientation.dispatchEvent || window.dispatchEvent)(new Event("orientationchange"));
-        accept();
-    });
+'use strict';
+function o9nInstall() {
+  var screen = window.screen;
+  if (typeof window.ScreenOrientation === 'function' && screen.orientation instanceof ScreenOrientation) {
+    return screen.orientation;
+  }
+  window.screen.orientation = orientation;
+  return orientation;
 }
-function iosScreenUnlock() {
-    var el = document.querySelector(".screen-lockable");
-    el && el.classList.remove("landscape");
-    (screen && screen.dispatchEvent || screen && screen.orientation.dispatchEvent || window.dispatchEvent)(new Event("orientationchange"));
-}
-if (window.screen) {
-    var screenLockApi = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation || screen.orientation && screen.orientation.lock && screen.orientation.lock.bind(screen.orientation);
-    screen.lockOrientationUniversal = screenLockApi || iosScreenLock$1;
-    screen.supportsScreenLock = !!screenLockApi;
-    screen.unlockOrientationUniversal = screen.unlockOrientation || screen.mozUnlockOrientation || screen.msUnlockOrientation || screen.orientation && screen.orientation.unlock && screen.orientation.unlock.bind(screen.orientation) || iosScreenUnlock;
-} else {
-    var _listeners = [];
-    window.screen = {
-        supportsScreenLock: false,
-        addEventListener: function addEventListener(name, callback) {
-            if (!_listeners[name]) _listeners[name] = [];
-            _listeners[name].push(callback);
-        },
-        dispatchEvent: function dispatchEvent(name) {
-            _listeners[name].forEach(function (callback) {
-                return callback();
-            });
-        }
-    };
-    window.screen.lockOrientationUniversal = iosScreenLock$1;
-    window.screen.unlockOrientationUniversal = iosScreenUnlock;
-}
-var ScreenLockApi = function () {
-    function ScreenLockApi() {
-        classCallCheck(this, ScreenLockApi);
-    }
-    createClass(ScreenLockApi, null, [{
-        key: "lockElement",
-        value: function lockElement(element) {
-            element.classList.add("screen-lockable");
-        }
-    }, {
-        key: "lock",
-        value: function lock(option) {
-            return screen.lockOrientationUniversal(option);
-        }
-    }, {
-        key: "unlock",
-        value: function unlock() {
-            return screen.unlockOrientationUniversal();
-        }
-    }, {
-        key: "supportsScreenLock",
-        get: function get$$1() {
-            return screen.supportsScreenLock;
-        }
-    }]);
-    return ScreenLockApi;
-}();
-
-var ScreenLock = function () {
-    function ScreenLock() {
-        var _this = this;
-        classCallCheck(this, ScreenLock);
-        this.container = document.body;
-        this.enabled = false;
-        if (!ScreenLockApi.supportsScreenLock) ScreenLockApi.lockElement(this.container);
-        if (IOSUtils.isIOS && IOSUtils.requireOrientationPermission) {
-            var onIOSClick = function onIOSClick() {
-                IOSUtils.requestOrientationPermissions().then(function (response) {
-                    if (response == 'granted') {
-                        window.addEventListener('orientationchange', function () {}, false);
-                        window.addEventListener('deviceorientation', function () {}, false);
-                    }
-                });
-                _this.container.removeEventListener('click', onIOSClick);
-            };
-            this.container.addEventListener('click', onIOSClick);
-        }
-    }
-    createClass(ScreenLock, [{
-        key: "enable",
-        value: function enable(e) {
-            if (this.enabled) return;
-            ScreenLockApi.lock("landscape").then(function () {}).catch(function () {});
-            this.enabled = true;
-        }
-    }, {
-        key: "disable",
-        value: function disable(e) {
-            if (!this.enabled) return;
-            ScreenLockApi.unlock();
-            this.enabled = false;
-        }
-    }]);
-    return ScreenLock;
-}();
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -2997,6 +2848,7 @@ module.exports = 'data:video/mp4;base64,AAAAIGZ0eXBtcDQyAAACAGlzb21pc28yYXZjMW1w
 });
 var NoSleep$1 = unwrapExports(NoSleep);
 
+o9nInstall();
 var iosScreenLock = new ScreenLock();
 var nextDisplayId = 1000;
 var defaultLeftBounds = [0, 0, 0.5, 1];
@@ -3244,8 +3096,6 @@ VRDisplay.prototype.requestPresent = function (layers) {
         self.enableWakeLock();
         self.waitingForPresent_ = true;
       } else if (isIOS() || isWebViewAndroid()) {
-        document.body.style.height = "calc(100% + 1px)";
-        window.scrollTo(0, 1);
         self.enableWakeLock();
         self.isPresenting = true;
         self.beginPresent_();
@@ -3256,8 +3106,6 @@ VRDisplay.prototype.requestPresent = function (layers) {
     if (!self.waitingForPresent_ && !isIOS()) {
       exitFullscreen();
       reject(new Error('Unable to present.'));
-    } else if (isIOS()) {
-      window.scrollTo(0, 0);
     }
   });
 };

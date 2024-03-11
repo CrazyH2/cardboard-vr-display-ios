@@ -14,8 +14,11 @@
  */
 
 import * as Util from './util.js';
-import ScreenLock from './screenlock.js';
+import o9nInstall from "./libraries/o9n.js"
 import NoSleep from 'nosleep.js/dist/NoSleep.js';
+
+// Add screenlock polyfill
+o9nInstall();
 
 // Get screenlock
 var iosScreenLock = new ScreenLock();
