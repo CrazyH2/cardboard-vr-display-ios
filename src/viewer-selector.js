@@ -133,7 +133,8 @@ ViewerSelector.prototype.createDialog_ = function(options) {
   s.width = width + 'px';
   s.padding = '24px';
   s.overflow = 'hidden';
-  s.background = '#fafafa';
+  s.background = '#161618';
+  s.borderRadius = '5px';
   s.fontFamily = "'Roboto', sans-serif";
   s.boxShadow = '0px 5px 20px #666';
 
@@ -152,7 +153,7 @@ ViewerSelector.prototype.createDialog_ = function(options) {
 ViewerSelector.prototype.createH1_ = function(name) {
   var h1 = document.createElement('h1');
   var s = h1.style;
-  s.color = 'black';
+  s.color = 'white';
   s.fontSize = '20px';
   s.fontWeight = 'bold';
   s.marginTop = 0;
@@ -170,7 +171,7 @@ ViewerSelector.prototype.createChoice_ = function(id, name) {
   */
   var div = document.createElement('div');
   div.style.marginTop = '8px';
-  div.style.color = 'black';
+  div.style.color = 'white';
 
   var input = document.createElement('input');
   input.style.fontSize = '30px';
