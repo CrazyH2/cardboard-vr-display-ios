@@ -1,7 +1,4 @@
-# cardboard-vr-display
-
-[![Build Status](http://img.shields.io/travis/immersive-web/cardboard-vr-display.svg?style=flat-square)](https://travis-ci.org/immersive-web/cardboard-vr-display)
-[![Build Status](http://img.shields.io/npm/v/cardboard-vr-display.svg?style=flat-square)](https://www.npmjs.org/package/cardboard-vr-display)
+# Cardboard VR Display for iOS
 
 A JavaScript implementation of a [WebVR 1.1 VRDisplay][VRDisplay]. This is the magic
 behind rendering distorted stereoscopic views for browsers that do not support the [WebVR API]
