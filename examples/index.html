@@ -71,7 +71,8 @@ document.addEventListener('touchmove', function(e) {
 <script src="../third_party/three.js/three.js"></script>
 
 <!-- VRControls.js applies the WebVR transformations to a three.js camera object. -->
-<script src="../third_party/three.js/VRControls.js"></script>
+<!--<script src="../third_party/three.js/VRControls.js"></script>-->
+<script src="../third_party/three.js/DeviceOrientationControls.js"></script>
 
 <!-- VREffect.js handles stereo camera setup and rendering.  -->
 <script src="../third_party/three.js/VREffect.js"></script>
@@ -154,7 +155,7 @@ camera.add(reticle);
 scene.add(camera);
 
 // Apply VR headset positional data to camera.
-//var controls = new THREE.VRControls(camera);
+var controls = new THREE.DeviceOrientationControls(camera);//VRControls(camera);
 
 // Apply VR stereo rendering to renderer.
 var effect = new THREE.VREffect(renderer);
@@ -205,7 +206,7 @@ function animate(timestamp) {
   cube.rotation.y += delta * 0.0006;
 
   // Update VR headset position and apply to camera.
-  //controls.update();
+  controls.update();
 
   // Render the scene.
   effect.render(scene, camera);
