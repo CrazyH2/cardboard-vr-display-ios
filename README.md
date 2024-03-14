@@ -1,7 +1,4 @@
-# cardboard-vr-display
-
-[![Build Status](http://img.shields.io/travis/immersive-web/cardboard-vr-display.svg?style=flat-square)](https://travis-ci.org/immersive-web/cardboard-vr-display)
-[![Build Status](http://img.shields.io/npm/v/cardboard-vr-display.svg?style=flat-square)](https://www.npmjs.org/package/cardboard-vr-display)
+# Cardboard VR Display for iOS
 
 A JavaScript implementation of a [WebVR 1.1 VRDisplay][VRDisplay]. This is the magic
 behind rendering distorted stereoscopic views for browsers that do not support the [WebVR API]
@@ -184,12 +181,6 @@ frame.pose; // { orientation, position }
 * `npm install`: installs the dependencies.
 * `npm run build`: builds the distributable.
 * `npm run watch`: watches `src/` for changes and rebuilds on change.
-
-### Releasing a new version
-
-For maintainers only, to cut a new release for npm, use the [npm version] command. The `preversion`, `version` and `postversion` npm scripts will run tests, build, add built files and tag to git, push to github, and publish the new npm version.
-
-`npm version <semverstring>`
 
 ## Running The Demo
 
