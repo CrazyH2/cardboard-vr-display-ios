@@ -1,5 +1,6 @@
 /**
  * @author THREE.js Authors
+ * @author crazyh / https://github.com/crazyh2
  */
 
 ( function () {
@@ -76,6 +77,8 @@
 
 						if ( response == 'granted' ) {
 
+                            onScreenOrientationChangeEvent();
+                            
 							window.addEventListener( 'orientationchange', onScreenOrientationChangeEvent );
 							window.addEventListener( 'deviceorientation', onDeviceOrientationChangeEvent );
 
