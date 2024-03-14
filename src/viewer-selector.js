@@ -175,6 +175,7 @@ ViewerSelector.prototype.createChoice_ = function(id, name) {
 
   var input = document.createElement('input');
   input.style.fontSize = '30px';
+  input.style.background = '#818181';
   input.setAttribute('id', id);
   input.setAttribute('type', 'radio');
   input.setAttribute('value', id);
