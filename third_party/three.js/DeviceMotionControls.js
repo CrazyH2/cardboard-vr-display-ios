@@ -1,5 +1,5 @@
 /**
- * @author THREE.js Authors
+ * @author crazyh / https://github.com/crazyh2
  */
 
 ( function () {
@@ -17,7 +17,7 @@
 		type: 'change'
 	};
 
-	class DeviceOrientationControls extends THREE.EventDispatcher {
+	class DeviceMotionControls extends THREE.EventDispatcher {
 
 		constructor( object ) {
 
@@ -25,7 +25,7 @@
 
 			if ( window.isSecureContext === false ) {
 
-				console.error( 'THREE.DeviceOrientationControls: DeviceOrientationEvent is only available in secure contexts (https)' );
+				console.error( 'THREE.DeviceMotionControls: DeviceMotionEvent is only available in secure contexts (https)' );
 
 			}
 
@@ -146,6 +146,6 @@
 
 	}
 
-	THREE.DeviceOrientationControls = DeviceOrientationControls;
+	THREE.DeviceMotionControls = DeviceMotionControls;
 
 } )();

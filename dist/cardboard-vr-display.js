@@ -1755,7 +1755,7 @@ var Viewers = {
   TeckNetVR: new CardboardViewer({
     id: 'TeckNetVR',
     label: 'TeckNet VR I/O',
-    fov: 45,
+    fov: 50,
     interLensDistance: 0.064,
     baselineLensDistance: 0.035,
     screenLensDistance: 0.039,

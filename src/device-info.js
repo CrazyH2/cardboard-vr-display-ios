@@ -91,43 +91,7 @@ var Viewers = {
     inverseCoefficients: [-0.33836704, -0.18162185, 0.862655, -1.2462051,
       1.0560602, -0.58208317, 0.21609078, -0.05444823, 0.009177956,
       -9.904169E-4, 6.183535E-5, -1.6981803E-6]
-  }),
-  TeckNetVR: new CardboardViewer({
-    id: 'TeckNetVR',
-    label: 'TeckNet VR I/O',
-    fov: 45,
-    interLensDistance: 0.064,
-    baselineLensDistance: 0.035,
-    screenLensDistance: 0.039,
-    distortionCoefficients: [0.34, 0.55],
-    inverseCoefficients: [-0.33836704, -0.18162185, 0.862655, -1.2462051,
-      1.0560602, -0.58208317, 0.21609078, -0.05444823, 0.009177956,
-      -9.904169E-4, 6.183535E-5, -1.6981803E-6]
-  }),
-  DEFAULT_FOV_1: new CardboardViewer({
-    id: 'DEFAULT_FOV_1',
-    label: '110 FOV Headset I/O',
-    fov: 110,
-    interLensDistance: 0.064,
-    baselineLensDistance: 0.035,
-    screenLensDistance: 0.039,
-    distortionCoefficients: [0.34, 0.55],
-    inverseCoefficients: [-0.33836704, -0.18162185, 0.862655, -1.2462051,
-      1.0560602, -0.58208317, 0.21609078, -0.05444823, 0.009177956,
-      -9.904169E-4, 6.183535E-5, -1.6981803E-6]
-  }),
-  DEFAULT_FOV_2: new CardboardViewer({
-    id: 'DEFAULT_FOV_2',
-    label: '60 FOV Headset I/O',
-    fov: 60,
-    interLensDistance: 0.064,
-    baselineLensDistance: 0.035,
-    screenLensDistance: 0.039,
-    distortionCoefficients: [0.34, 0.55],
-    inverseCoefficients: [-0.33836704, -0.18162185, 0.862655, -1.2462051,
-      1.0560602, -0.58208317, 0.21609078, -0.05444823, 0.009177956,
-      -9.904169E-4, 6.183535E-5, -1.6981803E-6]
-  }),
+  })
 };
 
 
