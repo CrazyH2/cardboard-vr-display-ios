@@ -2685,10 +2685,10 @@ ViewerSelector.prototype.createDialog_ = function (options) {
   s.width = width + 'px';
   s.padding = '24px';
   s.overflow = 'hidden';
-  s.background = '#161618';
+  s.background = '#212124';
   s.borderRadius = '5px';
   s.fontFamily = "'Roboto', sans-serif";
-  s.boxShadow = '0px 5px 20px #666';
+  s.boxShadow = '0px 5px 20px #212124';
   dialog.appendChild(this.createH1_('Select your viewer'));
   for (var id in options) {
     dialog.appendChild(this.createChoice_(id, options[id].label));
@@ -2712,7 +2712,7 @@ ViewerSelector.prototype.createH1_ = function (name) {
 ViewerSelector.prototype.createChoice_ = function (id, name) {
   var div = document.createElement('div');
   div.style.marginTop = '8px';
-  div.style.color = 'white';
+  div.style.color = '#818181';
   var input = document.createElement('input');
   input.style.fontSize = '30px';
   input.setAttribute('id', id);
