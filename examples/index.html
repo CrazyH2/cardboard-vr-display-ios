@@ -237,9 +237,15 @@ window.addEventListener('vrdisplaypresentchange', onVRDisplayPresentChange);
 // Button click handlers.
 document.querySelector('button#fullscreen').addEventListener('click', function() {
   enterFullscreen(renderer.domElement);
+  document.querySelector('button#vr').style.display = 'none';
+  document.querySelector('button#fullscreen').style.display = 'none';
+  document.querySelector('button#reset').style.display = 'none';
 });
 document.querySelector('button#vr').addEventListener('click', function() {
   vrDisplay.requestPresent([{source: renderer.domElement}]);
+  document.querySelector('button#vr').style.display = 'none';
+  document.querySelector('button#fullscreen').style.display = 'none';
+  document.querySelector('button#reset').style.display = 'none';
 });
 document.querySelector('button#reset').addEventListener('click', function() {
   vrDisplay.resetPose();

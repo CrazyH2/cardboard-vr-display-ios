@@ -2533,7 +2533,7 @@ function RotateInstructions() {
   s.bottom = '22px';
   s.borderRadius = '10px';
   s.marginLeft = '12px';
-  s.width = '100%';
+  s.width = 'calc(100% - 12px - 12px)';
   s.height = '48px';
   s.padding = '14px 24px';
   s.boxSizing = 'border-box';
