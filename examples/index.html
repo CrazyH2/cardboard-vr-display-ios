@@ -75,15 +75,17 @@ document.addEventListener('touchmove', function(e) {
 <script src="../third_party/three.js/DeviceOrientationControls.js"></script>
 <script src="../third_party/three.js/DeviceMotionControls.js"></script>
 
+<!-- Loaders for enviroment -->
+<script src="../third_party/three.js/MTLLoader.js"></script>
+<script src="../third_party/three.js/OBJLoader.js"></script>
+
 <!-- VREffect.js handles stereo camera setup and rendering.  -->
 <script src="../third_party/three.js/VREffect.js"></script>
 
 <script src="../dist/cardboard-vr-display.js"></script>
 
 
-<script type="module">
-import { MTLLoader } from "../third_party/three.js/MTLLoader.js";
-import { OBJLoader } from "../third_party/three.js/OBJLoader.js";
+<script>
 // Get config from URL
 var config = (function() {
   var config = {};
@@ -165,17 +167,25 @@ var moveControls = new THREE.DeviceMotionControls(camera);
 var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
+// Add a light
+var light = new THREE.AmbientLight( 0xb5b5b5 ); // soft white light
+scene.add( light );
+
 // Add a repeating grid as a skybox.
 /*var boxWidth = 5;
 var loader = new THREE.TextureLoader();
 loader.load('img/box.png', onTextureLoaded);*/
 
 // Add enviroment
+var mtlLoader = new THREE.MTLLoader();
 mtlLoader.load("assets/enviroment.mtl", function(materials) {
     materials.preload();
-    var objLoader = new OBJLoader();
+    var objLoader = new THREE.OBJLoader();
     objLoader.setMaterials(materials);
-    objLoader.load("assets/enviroment.obj", function(object) {    
+    objLoader.load("assets/enviroment.obj", function(object) {
+      object.position.z = -0.7;
+      object.position.x = 0.8999999999999999;
+      object.position.y = -0.5;
       scene.add(object);
     });
 });
@@ -200,7 +210,7 @@ function onTextureLoaded(texture) {
 }
 
 // Create 3D objects.
-var geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+/*var geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
 var material = new THREE.MeshNormalMaterial();
 var cube = new THREE.Mesh(geometry, material);
 
@@ -208,7 +218,7 @@ var cube = new THREE.Mesh(geometry, material);
 cube.position.z = -1;
 
 // Add cube mesh to your three.js scene
-scene.add(cube);
+scene.add(cube);*/
 
 // Request animation frame loop function
 var lastRender = 0;
@@ -217,7 +227,7 @@ function animate(timestamp) {
   lastRender = timestamp;
 
   // Apply rotation to cube mesh
-  cube.rotation.y += delta * 0.0006;
+  //cube.rotation.y += delta * 0.0006;
 
   // Update VR headset position and apply to camera.
   controls.update();

@@ -1,28 +1,18 @@
-import {
-	Color,
-	DefaultLoadingManager,
-	FileLoader,
-	FrontSide,
-	Loader,
-	LoaderUtils,
-	MeshPhongMaterial,
-	RepeatWrapping,
-	TextureLoader,
-	Vector2,
-	SRGBColorSpace
-} from './three.js';
-
 /**
  * Loads a Wavefront .mtl file specifying materials
+ *
+ * @author angelxuanchang
  */
 
-class MTLLoader extends Loader {
+THREE.MTLLoader = function ( manager ) {
 
-	constructor( manager ) {
+	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
 
-		super( manager );
+};
 
-	}
+THREE.MTLLoader.prototype = {
+
+	constructor: THREE.MTLLoader,
 
 	/**
 	 * Loads and parses a MTL asset from a URL.
@@ -32,75 +22,102 @@ class MTLLoader extends Loader {
 	 * @param {Function} [onProgress] - Callback for download progress.
 	 * @param {Function} [onError] - Callback for download errors.
 	 *
-	 * @see setPath setResourcePath
+	 * @see setPath setTexturePath
 	 *
 	 * @note In order for relative texture references to resolve correctly
-	 * you must call setResourcePath() explicitly prior to load.
+	 * you must call setPath and/or setTexturePath explicitly prior to load.
 	 */
-	load( url, onLoad, onProgress, onError ) {
+	load: function ( url, onLoad, onProgress, onError ) {
 
-		const scope = this;
+		var scope = this;
 
-		const path = ( this.path === '' ) ? LoaderUtils.extractUrlBase( url ) : this.path;
-
-		const loader = new FileLoader( this.manager );
+		var loader = new THREE.FileLoader( this.manager );
 		loader.setPath( this.path );
-		loader.setRequestHeader( this.requestHeader );
-		loader.setWithCredentials( this.withCredentials );
 		loader.load( url, function ( text ) {
 
-			try {
-
-				onLoad( scope.parse( text, path ) );
-
-			} catch ( e ) {
-
-				if ( onError ) {
-
-					onError( e );
-
-				} else {
-
-					console.error( e );
-
-				}
-
-				scope.manager.itemError( url );
-
-			}
+			onLoad( scope.parse( text ) );
 
 		}, onProgress, onError );
 
-	}
+	},
 
-	setMaterialOptions( value ) {
+	/**
+	 * Set base path for resolving references.
+	 * If set this path will be prepended to each loaded and found reference.
+	 *
+	 * @see setTexturePath
+	 * @param {String} path
+	 *
+	 * @example
+	 *     mtlLoader.setPath( 'assets/obj/' );
+	 *     mtlLoader.load( 'my.mtl', ... );
+	 */
+	setPath: function ( path ) {
+
+		this.path = path;
+
+	},
+
+	/**
+	 * Set base path for resolving texture references.
+	 * If set this path will be prepended found texture reference.
+	 * If not set and setPath is, it will be used as texture base path.
+	 *
+	 * @see setPath
+	 * @param {String} path
+	 *
+	 * @example
+	 *     mtlLoader.setPath( 'assets/obj/' );
+	 *     mtlLoader.setTexturePath( 'assets/textures/' );
+	 *     mtlLoader.load( 'my.mtl', ... );
+	 */
+	setTexturePath: function ( path ) {
+
+		this.texturePath = path;
+
+	},
+
+	setBaseUrl: function ( path ) {
+
+		console.warn( 'THREE.MTLLoader: .setBaseUrl() is deprecated. Use .setTexturePath( path ) for texture path or .setPath( path ) for general base path instead.' );
+
+		this.setTexturePath( path );
+
+	},
+
+	setCrossOrigin: function ( value ) {
+
+		this.crossOrigin = value;
+
+	},
+
+	setMaterialOptions: function ( value ) {
 
 		this.materialOptions = value;
-		return this;
 
-	}
+	},
 
 	/**
 	 * Parses a MTL file.
 	 *
 	 * @param {String} text - Content of MTL file
-	 * @return {MaterialCreator}
+	 * @return {THREE.MTLLoader.MaterialCreator}
 	 *
-	 * @see setPath setResourcePath
+	 * @see setPath setTexturePath
 	 *
 	 * @note In order for relative texture references to resolve correctly
-	 * you must call setResourcePath() explicitly prior to parse.
+	 * you must call setPath and/or setTexturePath explicitly prior to parse.
 	 */
-	parse( text, path ) {
+	parse: function ( text ) {
 
-		const lines = text.split( '\n' );
-		let info = {};
-		const delimiter_pattern = /\s+/;
-		const materialsInfo = {};
+		var lines = text.split( '\n' );
+		var info = {};
+		var delimiter_pattern = /\s+/;
+		var materialsInfo = {};
 
-		for ( let i = 0; i < lines.length; i ++ ) {
+		for ( var i = 0; i < lines.length; i ++ ) {
 
-			let line = lines[ i ];
+			var line = lines[ i ];
 			line = line.trim();
 
 			if ( line.length === 0 || line.charAt( 0 ) === '#' ) {
@@ -110,12 +127,12 @@ class MTLLoader extends Loader {
 
 			}
 
-			const pos = line.indexOf( ' ' );
+			var pos = line.indexOf( ' ' );
 
-			let key = ( pos >= 0 ) ? line.substring( 0, pos ) : line;
+			var key = ( pos >= 0 ) ? line.substring( 0, pos ) : line;
 			key = key.toLowerCase();
 
-			let value = ( pos >= 0 ) ? line.substring( pos + 1 ) : '';
+			var value = ( pos >= 0 ) ? line.substring( pos + 1 ) : '';
 			value = value.trim();
 
 			if ( key === 'newmtl' ) {
@@ -125,11 +142,11 @@ class MTLLoader extends Loader {
 				info = { name: value };
 				materialsInfo[ value ] = info;
 
-			} else {
+			} else if ( info ) {
 
-				if ( key === 'ka' || key === 'kd' || key === 'ks' || key === 'ke' ) {
+				if ( key === 'ka' || key === 'kd' || key === 'ks' ) {
 
-					const ss = value.split( delimiter_pattern, 3 );
+					var ss = value.split( delimiter_pattern, 3 );
 					info[ key ] = [ parseFloat( ss[ 0 ] ), parseFloat( ss[ 1 ] ), parseFloat( ss[ 2 ] ) ];
 
 				} else {
@@ -142,7 +159,7 @@ class MTLLoader extends Loader {
 
 		}
 
-		const materialCreator = new MaterialCreator( this.resourcePath || path, this.materialOptions );
+		var materialCreator = new THREE.MTLLoader.MaterialCreator( this.texturePath || this.path, this.materialOptions );
 		materialCreator.setCrossOrigin( this.crossOrigin );
 		materialCreator.setManager( this.manager );
 		materialCreator.setMaterials( materialsInfo );
@@ -150,16 +167,16 @@ class MTLLoader extends Loader {
 
 	}
 
-}
+};
 
 /**
- * Create a new MTLLoader.MaterialCreator
+ * Create a new THREE-MTLLoader.MaterialCreator
  * @param baseUrl - Url relative to which textures are loaded
  * @param options - Set of options on how to construct the materials
  *                  side: Which side to apply the material
- *                        FrontSide (default), THREE.BackSide, THREE.DoubleSide
+ *                        THREE.FrontSide (default), THREE.BackSide, THREE.DoubleSide
  *                  wrap: What type of wrapping to apply for textures
- *                        RepeatWrapping (default), THREE.ClampToEdgeWrapping, THREE.MirroredRepeatWrapping
+ *                        THREE.RepeatWrapping (default), THREE.ClampToEdgeWrapping, THREE.MirroredRepeatWrapping
  *                  normalizeRGB: RGBs need to be normalized to 0-1 from 0-255
  *                                Default: false, assumed to be already normalized
  *                  ignoreZeroRGBs: Ignore values of RGBs (Ka,Kd,Ks) that are all 0's
@@ -167,67 +184,68 @@ class MTLLoader extends Loader {
  * @constructor
  */
 
-class MaterialCreator {
+THREE.MTLLoader.MaterialCreator = function ( baseUrl, options ) {
 
-	constructor( baseUrl = '', options = {} ) {
+	this.baseUrl = baseUrl || '';
+	this.options = options;
+	this.materialsInfo = {};
+	this.materials = {};
+	this.materialsArray = [];
+	this.nameLookup = {};
 
-		this.baseUrl = baseUrl;
-		this.options = options;
-		this.materialsInfo = {};
-		this.materials = {};
-		this.materialsArray = [];
-		this.nameLookup = {};
+	this.side = ( this.options && this.options.side ) ? this.options.side : THREE.FrontSide;
+	this.wrap = ( this.options && this.options.wrap ) ? this.options.wrap : THREE.RepeatWrapping;
 
-		this.crossOrigin = 'anonymous';
+};
 
-		this.side = ( this.options.side !== undefined ) ? this.options.side : FrontSide;
-		this.wrap = ( this.options.wrap !== undefined ) ? this.options.wrap : RepeatWrapping;
+THREE.MTLLoader.MaterialCreator.prototype = {
 
-	}
+	constructor: THREE.MTLLoader.MaterialCreator,
 
-	setCrossOrigin( value ) {
+	crossOrigin: 'Anonymous',
+
+	setCrossOrigin: function ( value ) {
 
 		this.crossOrigin = value;
-		return this;
 
-	}
+	},
 
-	setManager( value ) {
+	setManager: function ( value ) {
 
 		this.manager = value;
 
-	}
+	},
 
-	setMaterials( materialsInfo ) {
+	setMaterials: function ( materialsInfo ) {
 
 		this.materialsInfo = this.convert( materialsInfo );
 		this.materials = {};
 		this.materialsArray = [];
 		this.nameLookup = {};
 
-	}
+	},
 
-	convert( materialsInfo ) {
+	convert: function ( materialsInfo ) {
 
 		if ( ! this.options ) return materialsInfo;
 
-		const converted = {};
+		var converted = {};
 
-		for ( const mn in materialsInfo ) {
+		for ( var mn in materialsInfo ) {
 
 			// Convert materials info into normalized form based on options
 
-			const mat = materialsInfo[ mn ];
+			var mat = materialsInfo[ mn ];
 
-			const covmat = {};
+			var covmat = {};
 
 			converted[ mn ] = covmat;
 
-			for ( const prop in mat ) {
+			for ( var prop in mat ) {
 
-				let save = true;
-				let value = mat[ prop ];
-				const lprop = prop.toLowerCase();
+				var save = true;
+				var value = mat[ prop ];
+				var lprop = prop.toLowerCase();
 
 				switch ( lprop ) {
 
@@ -275,29 +293,29 @@ class MaterialCreator {
 
 		return converted;
 
-	}
+	},
 
-	preload() {
+	preload: function () {
 
-		for ( const mn in this.materialsInfo ) {
+		for ( var mn in this.materialsInfo ) {
 
 			this.create( mn );
 
 		}
 
-	}
+	},
 
-	getIndex( materialName ) {
+	getIndex: function ( materialName ) {
 
 		return this.nameLookup[ materialName ];
 
-	}
+	},
 
-	getAsArray() {
+	getAsArray: function () {
 
-		let index = 0;
+		var index = 0;
 
-		for ( const mn in this.materialsInfo ) {
+		for ( var mn in this.materialsInfo ) {
 
 			this.materialsArray[ index ] = this.create( mn );
 			this.nameLookup[ mn ] = index;
@@ -307,9 +325,9 @@ class MaterialCreator {
 
 		return this.materialsArray;
 
-	}
+	},
 
-	create( materialName ) {
+	create: function ( materialName ) {
 
 		if ( this.materials[ materialName ] === undefined ) {
 
@@ -319,15 +337,15 @@ class MaterialCreator {
 
 		return this.materials[ materialName ];
 
-	}
+	},
 
-	createMaterial_( materialName ) {
+	createMaterial_: function ( materialName ) {
 
 		// Create material
 
-		const scope = this;
-		const mat = this.materialsInfo[ materialName ];
-		const params = {
+		var scope = this;
+		var mat = this.materialsInfo[ materialName ];
+		var params = {
 
 			name: materialName,
 			side: this.side
@@ -350,8 +368,8 @@ class MaterialCreator {
 
 			if ( params[ mapType ] ) return; // Keep the first encountered texture
 
-			const texParams = scope.getTextureParams( value, params );
-			const map = scope.loadTexture( resolveURL( scope.baseUrl, texParams.url ) );
+			var texParams = scope.getTextureParams( value, params );
+			var map = scope.loadTexture( resolveURL( scope.baseUrl, texParams.url ) );
 
 			map.repeat.copy( texParams.scale );
 			map.offset.copy( texParams.offset );
@@ -359,20 +377,14 @@ class MaterialCreator {
 			map.wrapS = scope.wrap;
 			map.wrapT = scope.wrap;
 
-			if ( mapType === 'map' || mapType === 'emissiveMap' ) {
-
-				map.colorSpace = SRGBColorSpace;
-
-			}
-
 			params[ mapType ] = map;
 
 		}
 
-		for ( const prop in mat ) {
+		for ( var prop in mat ) {
 
-			const value = mat[ prop ];
-			let n;
+			var value = mat[ prop ];
+			var n;
 
 			if ( value === '' ) continue;
 
@@ -384,21 +396,14 @@ class MaterialCreator {
 
 					// Diffuse color (color under white light) using RGB values
 
-					params.color = new Color().fromArray( value ).convertSRGBToLinear();
+					params.color = new THREE.Color().fromArray( value );
 
 					break;
 
 				case 'ks':
 
 					// Specular color (color when light is reflected from shiny surface) using RGB values
-					params.specular = new Color().fromArray( value ).convertSRGBToLinear();
-
-					break;
-
-				case 'ke':
-
-					// Emissive using RGB values
-					params.emissive = new Color().fromArray( value ).convertSRGBToLinear();
+					params.specular = new THREE.Color().fromArray( value );
 
 					break;
 
@@ -406,7 +411,7 @@ class MaterialCreator {
 
 					// Diffuse texture map
 
-					setMapForType( 'map', value );
+					setMapForType( "map", value );
 
 					break;
 
@@ -414,21 +419,13 @@ class MaterialCreator {
 
 					// Specular map
 
-					setMapForType( 'specularMap', value );
-
-					break;
-
-				case 'map_ke':
-
-					// Emissive map
-
-					setMapForType( 'emissiveMap', value );
+					setMapForType( "specularMap", value );
 
 					break;
 
 				case 'norm':
 
-					setMapForType( 'normalMap', value );
+					setMapForType( "normalMap", value );
 
 					break;
 
@@ -437,16 +434,7 @@ class MaterialCreator {
 
 					// Bump texture map
 
-					setMapForType( 'bumpMap', value );
-
-					break;
-
-				case 'map_d':
-
-					// Alpha map
-
-					setMapForType( 'alphaMap', value );
-					params.transparent = true;
+					setMapForType( "bumpMap", value );
 
 					break;
 
@@ -460,7 +448,7 @@ class MaterialCreator {
 					break;
 
 				case 'd':
-					n = parseFloat( value );
+					n = parseFloat(value);
 
 					if ( n < 1 ) {
 
@@ -472,9 +460,7 @@ class MaterialCreator {
 					break;
 
 				case 'tr':
-					n = parseFloat( value );
-
-					if ( this.options && this.options.invertTrProperty ) n = 1 - n;
+					n = parseFloat(value);
 
 					if ( n > 0 ) {
 
@@ -492,22 +478,22 @@ class MaterialCreator {
 
 		}
 
-		this.materials[ materialName ] = new MeshPhongMaterial( params );
+		this.materials[ materialName ] = new THREE.MeshPhongMaterial( params );
 		return this.materials[ materialName ];
 
-	}
+	},
 
-	getTextureParams( value, matParams ) {
+	getTextureParams: function ( value, matParams ) {
 
-		const texParams = {
+		var texParams = {
 
-			scale: new Vector2( 1, 1 ),
-			offset: new Vector2( 0, 0 )
+			scale: new THREE.Vector2( 1, 1 ),
+			offset: new THREE.Vector2( 0, 0 )
 
 		 };
 
-		const items = value.split( /\s+/ );
-		let pos;
+		var items = value.split( /\s+/ );
+		var pos;
 
 		pos = items.indexOf( '-bm' );
 
@@ -539,22 +525,22 @@ class MaterialCreator {
 		texParams.url = items.join( ' ' ).trim();
 		return texParams;
 
-	}
+	},
 
-	loadTexture( url, mapping, onLoad, onProgress, onError ) {
+	loadTexture: function ( url, mapping, onLoad, onProgress, onError ) {
 
-		const manager = ( this.manager !== undefined ) ? this.manager : DefaultLoadingManager;
-		let loader = manager.getHandler( url );
+		var texture;
+		var loader = THREE.Loader.Handlers.get( url );
+		var manager = ( this.manager !== undefined ) ? this.manager : THREE.DefaultLoadingManager;
 
 		if ( loader === null ) {
 
-			loader = new TextureLoader( manager );
+			loader = new THREE.TextureLoader( manager );
 
 		}
 
 		if ( loader.setCrossOrigin ) loader.setCrossOrigin( this.crossOrigin );
-
-		const texture = loader.load( url, onLoad, onProgress, onError );
+		texture = loader.load( url, onLoad, onProgress, onError );
 
 		if ( mapping !== undefined ) texture.mapping = mapping;
 
@@ -562,6 +548,4 @@ class MaterialCreator {
 
 	}
 
-}
-
-export { MTLLoader };
+};
