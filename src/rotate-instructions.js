@@ -55,6 +55,8 @@ function RotateInstructions() {
   s.position = 'fixed';
   s.bottom = '15px';
   s.borderRadius = '10px';
+  s.marginLeft = '12px';
+  s.marginRight = '12px';
   s.width = '100%';
   s.height = '48px';
   s.padding = '14px 24px';
