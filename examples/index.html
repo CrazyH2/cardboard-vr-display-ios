@@ -81,7 +81,9 @@ document.addEventListener('touchmove', function(e) {
 <script src="../dist/cardboard-vr-display.js"></script>
 
 
-<script>
+<script type="module">
+import { MTLLoader } from "../third_party/three.js/MTLLoader.js";
+import { OBJLoader } from "../third_party/three.js/OBJLoader.js";
 // Get config from URL
 var config = (function() {
   var config = {};
@@ -164,9 +166,19 @@ var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
 // Add a repeating grid as a skybox.
-var boxWidth = 5;
+/*var boxWidth = 5;
 var loader = new THREE.TextureLoader();
-loader.load('img/box.png', onTextureLoaded);
+loader.load('img/box.png', onTextureLoaded);*/
+
+// Add enviroment
+mtlLoader.load("assets/enviroment.mtl", function(materials) {
+    materials.preload();
+    var objLoader = new OBJLoader();
+    objLoader.setMaterials(materials);
+    objLoader.load("assets/enviroment.obj", function(object) {    
+      scene.add(object);
+    });
+});
 
 // Kick off the render loop.
 vrDisplay.requestAnimationFrame(animate);
