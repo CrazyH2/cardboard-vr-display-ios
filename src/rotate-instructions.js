@@ -53,7 +53,8 @@ function RotateInstructions() {
   var s = snackbar.style;
   s.backgroundColor = '#212124';
   s.position = 'fixed';
-  s.bottom = '5px';
+  s.bottom = '15px';
+  s.borderRadius = '10px';
   s.width = '100%';
   s.height = '48px';
   s.padding = '14px 24px';
