@@ -167,8 +167,9 @@ var moveControls = new THREE.DeviceMotionControls(camera);
 var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
-// Add a light
-var light = new THREE.AmbientLight( 0xb5b5b5 ); // soft white light
+// Add a light and sky
+scene.background = new THREE.Color(0x63cbeb);
+var light = new THREE.DirectionalLight(0xffffff, 0.4);
 scene.add( light );
 
 // Add a repeating grid as a skybox.
