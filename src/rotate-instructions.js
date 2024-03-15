@@ -26,7 +26,7 @@ function RotateInstructions() {
   s.right = 0;
   s.bottom = 0;
   s.left = 0;
-  s.backgroundColor = 'gray';
+  s.backgroundColor = '#161618';
   s.fontFamily = 'sans-serif';
   // Force this to be above the fullscreen canvas, which is at zIndex: 999999.
   s.zIndex = 1000000;
@@ -51,14 +51,14 @@ function RotateInstructions() {
 
   var snackbar = document.createElement('div');
   var s = snackbar.style;
-  s.backgroundColor = '#CFD8DC';
+  s.backgroundColor = '#212124';
   s.position = 'fixed';
   s.bottom = 0;
   s.width = '100%';
   s.height = '48px';
   s.padding = '14px 24px';
   s.boxSizing = 'border-box';
-  s.color = '#656A6B';
+  s.color = '#818181';
   overlay.appendChild(snackbar);
 
   var snackbarText = document.createElement('div');
@@ -76,7 +76,7 @@ function RotateInstructions() {
   s.borderLeft = '1px solid gray';
   s.paddingLeft = '24px';
   s.textDecoration = 'none';
-  s.color = '#656A6B';
+  s.color = '#818181';
 
   snackbar.appendChild(snackbarText);
   snackbar.appendChild(snackbarButton);
