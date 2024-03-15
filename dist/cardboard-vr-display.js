@@ -2507,7 +2507,7 @@ function RotateInstructions() {
   s.right = 0;
   s.bottom = 0;
   s.left = 0;
-  s.backgroundColor = 'gray';
+  s.backgroundColor = '#161618';
   s.fontFamily = 'sans-serif';
   s.zIndex = 1000000;
   var img = document.createElement('img');
@@ -2528,14 +2528,14 @@ function RotateInstructions() {
   overlay.appendChild(text);
   var snackbar = document.createElement('div');
   var s = snackbar.style;
-  s.backgroundColor = '#CFD8DC';
+  s.backgroundColor = '#212124';
   s.position = 'fixed';
   s.bottom = 0;
   s.width = '100%';
   s.height = '48px';
   s.padding = '14px 24px';
   s.boxSizing = 'border-box';
-  s.color = '#656A6B';
+  s.color = '#818181';
   overlay.appendChild(snackbar);
   var snackbarText = document.createElement('div');
   snackbarText.style.float = 'left';
@@ -2551,7 +2551,7 @@ function RotateInstructions() {
   s.borderLeft = '1px solid gray';
   s.paddingLeft = '24px';
   s.textDecoration = 'none';
-  s.color = '#656A6B';
+  s.color = '#818181';
   snackbar.appendChild(snackbarText);
   snackbar.appendChild(snackbarButton);
   this.overlay = overlay;
@@ -2689,6 +2689,7 @@ ViewerSelector.prototype.createDialog_ = function (options) {
   s.borderRadius = '5px';
   s.fontFamily = "'Roboto', sans-serif";
   s.boxShadow = '0px 5px 20px #212124';
+  s.accentColor = 'dark !important';
   dialog.appendChild(this.createH1_('Select your viewer'));
   for (var id in options) {
     dialog.appendChild(this.createChoice_(id, options[id].label));
@@ -2712,15 +2713,15 @@ ViewerSelector.prototype.createH1_ = function (name) {
 ViewerSelector.prototype.createChoice_ = function (id, name) {
   var div = document.createElement('div');
   div.style.marginTop = '8px';
-  div.style.color = '#818181';
+  div.style.color = 'rgb(193, 193, 193)';
   var input = document.createElement('input');
   input.style.fontSize = '30px';
-  input.style.background = '#818181';
   input.setAttribute('id', id);
   input.setAttribute('type', 'radio');
   input.setAttribute('value', id);
   input.setAttribute('name', 'field');
   var label = document.createElement('label');
+  label.style.accentColor = 'rgb(16, 148, 247)';
   label.style.marginLeft = '4px';
   label.setAttribute('for', id);
   label.innerHTML = name;
