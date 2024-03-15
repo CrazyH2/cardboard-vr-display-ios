@@ -33,22 +33,20 @@
 			this.object = object;
 			this.enabled = true;
             this.deviceMotion = {};
-            this.deviceMotionSec = {};
-            this.offsetPosition = {
+            this.accelerationAmount = {
                 x: 0,
                 y: 0,
                 z: 0
             };
 
-            const onDeviceMotionEventSec = function () {
-
-				scope.deviceMotionSec = scope.deviceMotion;
-
-			};
-
             const onDeviceMotionEvent = function ( event ) {
 
 				scope.deviceMotion = event;
+				scope.accelerationAmount = {
+					x: event.acceleration.x,
+					y: event.acceleration.y,
+					z: event.acceleration.z
+				};
 
 			};
 
@@ -63,7 +61,6 @@
 						if ( response == 'granted' ) {
 
 							window.addEventListener( 'devicemotion', onDeviceMotionEvent );
-                            window.setInterval(onDeviceMotionEventSec, 1000);
 
 						}
 
@@ -76,7 +73,6 @@
 				} else {
 
 					window.addEventListener( 'devicemotion', onDeviceMotionEvent );
-                    window.setInterval(onDeviceMotionEventSec, 1000);
 
 				}
 
@@ -87,7 +83,6 @@
 			this.disconnect = function () {
 
 				window.removeEventListener( 'devicemotion', onDeviceMotionEvent );
-                window.clearInterval(onDeviceMotionEventSec, 1000);
 				scope.enabled = false;
 
 			};
@@ -95,17 +90,37 @@
 			this.update = function () {
 
 				if ( scope.enabled === false ) return;
-				const device = scope.deviceMotionSec;
+				const device = scope.deviceMotion;
 
-				if ( device ) {
+				if ( device && scope.accelerationAmount ) {
 
-                    this.object.translateX(device ? device.acceleration.x : 0);
+					const interval = device.interval;
+					const amountInSec = Math.floor(1 / interval);
 
-                    this.object.translateY(device ? device.acceleration.y : 0);
+					const accelerationX = device ? scope.accelerationAmount.x : 0;
 
-                    this.object.translateZ(device ? device.acceleration.z : 0);
+					const accelerationY = device ? scope.accelerationAmount.y : 0;
+					
+					const accelerationZ = device ? scope.accelerationAmount.z : 0;
+
+					const distanceX = accelerationX / amountInSec;
+
+					const distanceY = accelerationY / amountInSec;
+
+					const distanceZ = accelerationZ / amountInSec;
+
+                    this.object.translateX(distanceX);
+
+                    this.object.translateY(distanceY);
+
+                    this.object.translateZ(distanceZ);
 
                     device = undefined;
+					scope.accelerationAmount = {
+						x: 0,
+						y: 0,
+						z: 0
+					};
 
 				}
 
